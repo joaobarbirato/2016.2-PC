@@ -1,0 +1,255 @@
+!<arch>
+mainAluno.cpp/  1478875799  1000  1000  100644  2185      `
+/*
+Alunos:
+	Bruna Magalh„es
+	Gabrieli Santos
+	Jo„o Barbirato
+	Leonardo Peralta
+*/
+
+#include <iostream>
+#include <new> // usar new
+#include "mainAluno.h"
+
+int Aluno::URA = 9999;
+
+// M√©todos
+
+// Objetivo: inicializar o objeto
+// n - nome
+// nNotas - n√∫mero de notas
+Aluno::Aluno(string n = "Jo„o Victor", int nNotas = 0) :RA(++URA) {
+    int i;
+	nome = n;
+	quantNotas = nNotas;
+    ptrNotas = new double [quantNotas];
+    for(i=0;i<quantNotas;i++)
+        ptrNotas[i]=0;
+}; // fim construtor
+// Objetivo: inicializar o objeto
+Aluno::Aluno():RA(++URA) {
+    quantNotas=0;
+	cout << "CriaÁ„o do vetor alunos realizada com sucesso" << endl << endl;
+
+}; // fim construtor
+// Objetivo: mudar o nome do objeto
+// n - nome
+bool Aluno::setNome(string n){
+	if ( n != "" ){
+		nome = n;
+		return true;
+	}
+	return false;
+}; // fim setNome
+
+// Objetivo: mudar nota de acordo com sua posi√ß√£o no vetor de notas
+//           ( notas de 0 a 100 )
+bool Aluno::setNota(int posicao, double nota){
+	if( (nota >= 0 && nota <= 100) && (posicao >= 0 && posicao < quantNotas) ){
+		ptrNotas[posicao] = nota;
+		return true;
+	}
+	return false;
+}; // fim setNota
+
+void Aluno::setQuantNotas(int nNota=1) {
+    int i;
+    URA=RA;
+    quantNotas=nNota;
+    delete [] ptrNotas;
+    ptrNotas = new double [nNota];
+    for(i=0;i<nNota;i++)
+        ptrNotas[i]=0;
+}
+
+// Objetivo: obter o nome do objeto
+string Aluno::getNome() const{
+	return nome;
+}; // fim getNome
+
+// Objetivo: obter a nota num vetor fornecendo a posi√ß√£o no vetor
+bool Aluno::getNota(int posicao,double & nota) {
+	if (posicao < quantNotas && 0 <= posicao){
+		nota = ptrNotas[posicao];
+		return true;
+	}
+	return false;
+}; // fim getNota
+
+int Aluno::getUltimoRA(){
+	return URA;
+};
+
+int Aluno::getQuantNotas() const{
+	return quantNotas;
+};
+int Aluno::getRa() const{
+	return RA;
+};
+
+void Aluno::mostrarAluno()const{
+    int i;
+
+    cout << "RA: " << RA << endl;
+    cout << "Nome: " << nome << endl;
+    cout << "Quantidade de notas: " << quantNotas << endl;
+    cout << "Notas:" << endl;
+    for(i=0;i<quantNotas;i++)
+        cout << "Nota " << i+1 << ": " << ptrNotas[i] << endl;
+}
+// Destrutor
+Aluno::~Aluno(){
+	delete[] ptrNotas;
+}; // fim destrutor
+
+mainAluno.h/    1478875800  1000  1000  100644  622       `
+/*
+Alunos:
+	Bruna Magalh√£es
+	Gabrieli Santos
+	Jo√£o Barbirato
+	Leonardo Peralta
+*/
+
+#ifndef mainAluno_h
+#define mainAluno_h
+#include <string>
+
+using namespace std;
+
+class Aluno{
+
+	private:
+		const int RA;
+		string nome;
+		int quantNotas;
+		double *ptrNotas;
+		static int URA;
+
+	public:
+		Aluno(string, int nNotas);
+		Aluno();
+		~Aluno();
+		bool setNome(string);
+		string getNome() const;
+		int getRa() const;
+		void setQuantNotas(int) ;
+		int getQuantNotas() const;
+		bool setNota(int posicao, double nota);
+		bool getNota(int posicao, double & nota);
+		static int getUltimoRA();
+		void mostrarAluno() const;
+};
+
+
+#endif
+main.cpp/       1478875797  1000  1000  100644  3610      `
+/*
+Alunos:
+	Bruna Magalh„es
+	Gabrieli Santos
+	Jo„o Barbirato
+	Leonardo Peralta
+*/
+
+#include <iostream>
+#include <stdlib.h>
+#include "mainAluno.h"
+#include <string>
+using namespace std;
+#define tam 5
+int main(){
+    Aluno *alunos= new Aluno[tam];
+    int indice=0;
+    string nome;
+    bool cadastroConcluido=false;
+    int i,j,opcao,nNota,ra;
+    double nota;
+    int quantNotas;
+
+    do{
+        system("cls");
+        cout << "1 - Cadastrar aluno." << endl;
+        cout << "2 - Excluir aluno." << endl;
+        cout << "3 - Exibir alunos." << endl;
+        cout << "4 - Mostrar ultimo RA." << endl;
+        cout << "0 - Sair." << endl;
+        cout << "Digite a opÁ„o desejada:" << endl;
+        cin >> opcao;
+
+        switch (opcao){
+
+            case 1:
+
+                if(indice<tam-1){
+                    while(!cadastroConcluido){
+                        cout << "Digite o nome do aluno: "<< endl;
+                        cin >> nome;
+                        cout << "Digite a quantidade de notas do aluno :"<< endl;
+                        cin >> quantNotas;
+                        while(alunos[indice].getQuantNotas()!=0)
+                            indice++;
+                        alunos[indice].setQuantNotas(quantNotas);
+                        cadastroConcluido = alunos[indice].setNome(nome);
+                    }
+                    do{
+                     cout << "Deseja inserir as notas ? (1-Sim,0-Nao) "<< endl;
+                     cin >> cadastroConcluido;
+                     if(cadastroConcluido){
+                        cout << "Digite o numero da nota (1,...,n): "<< endl;
+                        cin >> nNota;
+                        cout << "Digite o valor da nota :"<< endl;
+                        cin >> nota;
+                        alunos[indice].setQuantNotas(nNota);
+                        if(alunos[indice].setNota(nNota-1,nota))
+                           cout << "Nota computada "<< endl;
+                     }
+                    }while(cadastroConcluido);
+                    cadastroConcluido= false;
+                    indice++;
+                }
+                break;
+            case 2:
+                cout << "Digite o RA do aluno que deseja excluir:"<< endl;
+                cin >> ra;
+                for(i=0;i<indice;i++){
+                    if(ra==alunos[i].getRa()){
+                            alunos[i].setQuantNotas(0);
+                            indice=i;
+                        break;
+                    }else{
+                        if(i==indice-1)
+                            cout << "Aluno n„o encontrado."<< endl;
+                    }
+
+                }
+                system("pause");
+                break;
+            case 3:
+                for(i=0;i<tam;i++){
+                    if(alunos[i].getQuantNotas()!=0){
+                        cout << "Aluno "<< i+1 << ": " << endl;
+                        alunos[i].mostrarAluno();
+                    }
+                }
+                system("pause");
+                break;
+            case 4:
+                if(indice !=0)
+                    cout << "RA do ultimo aluno cadastrado: "<< alunos[0].getUltimoRA() << endl;
+                else
+                    cout << "Nenhum aluno cadastrado"<< endl;
+                system("pause");
+                break;
+            default:
+                if(opcao!=0)
+                    cout << "OpÁ„o n„o disponivel"<< endl;
+                break;
+
+        }
+    }while(opcao != 0);
+        delete[] alunos;
+
+	return 0;
+}

@@ -1,0 +1,7 @@
+# depslib dependency file v1.0
+1485988902 source:c:\users\619930\desktop\template\src\aluno.cpp
+	"aluno.h"
+
+1485988958 c:\users\619930\desktop\template\include\aluno.h
+	<iostream>
+
